@@ -1,6 +1,8 @@
 from src.config import get_config
-from src.utils import set_seed, calculate_file_hash
+from src.utils import set_seed
 from src.data.loader import BinanceDataLoader
+from src.data.splitter import TemporalDataSplitter
+from src.features.engine import FeatureEngine
 
 
 def main():
@@ -8,21 +10,31 @@ def main():
     set_seed(config.system.random_seed)
 
     print(f"=== Project: {config.system.project_name} ===")
-    print(f"Loading data from: {config.data.raw_path}")
-
-    # Hash check
-    data_hash = calculate_file_hash(config.data.raw_path)
-    print(f"Raw Data MD5 Hash: {data_hash}")
-
-    # Load & Validate Data
+    
+    # 1. Ingestion
     loader = BinanceDataLoader(config.data.raw_path)
-    df = loader.load_raw_klines()
+    raw_df = loader.load_raw_klines()
+    print(f"[A2] Raw Data Loaded: {len(raw_df):,} rows")
 
-    print("\n--- Data Ingestion Successful ---")
-    print(f"Total Rows Loaded: {len(df):,}")
-    print(f"Time Range: {df['datetime'].min()} to {df['datetime'].max()}")
-    print("\nFirst 3 Rows Preview:")
-    print(df[["datetime", "open", "high", "low", "close", "volume"]].head(3))
+    # 2. Feature Engineering
+    feature_engine = FeatureEngine(config.features)
+    processed_df, feature_cols = feature_engine.create_features_and_target(raw_df)
+    print(f"[A3] Feature Engineering Complete: {len(feature_cols)} features created")
+    print(f"     Features: {feature_cols}")
+    print(f"     Processed Dataset Shape: {processed_df.shape}")
+
+    # 3. Temporal Split
+    splitter = TemporalDataSplitter(
+        train_ratio=config.data.train_ratio,
+        val_ratio=config.data.val_ratio,
+        test_ratio=config.data.test_ratio,
+    )
+    train_df, val_df, test_df = splitter.split(processed_df)
+
+    print("\n[A2/A3] Strict Temporal Split Summary:")
+    print(f"     Train Set : {len(train_df):,} rows | {train_df['datetime'].min()} -> {train_df['datetime'].max()}")
+    print(f"     Val Set   : {len(val_df):,} rows  | {val_df['datetime'].min()} -> {val_df['datetime'].max()}")
+    print(f"     Test Set  : {len(test_df):,} rows  | {test_df['datetime'].min()} -> {test_df['datetime'].max()}")
 
 
 if __name__ == "__main__":
