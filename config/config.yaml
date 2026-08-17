@@ -1,0 +1,38 @@
+system:
+  project_name: "ml-crypto"
+  random_seed: 42
+  environment: "development"
+
+data:
+  raw_path: "data/raw/BTCUSDT-1m-2026-07.csv"
+  processed_dir: "data/processed"
+  reference_dir: "data/reference"
+  time_column: "timestamp"
+  target_column: "target_return"
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+
+features:
+  schema_version: "v1.0.0"
+  ma_windows: [5, 15, 60]
+  rsi_period: 14
+  volatility_window: 20
+  return_horizon: 1
+
+modeling:
+  model_type: "lightgbm"
+  hyperparameters:
+    n_estimators: 100
+    learning_rate: 0.05
+    max_depth: 6
+    random_state: 42
+
+drift:
+  psi_threshold: 0.2  
+  ks_alpha: 0.05     
+
+artifacts:
+  base_dir: "artifacts"
+  models_dir: "artifacts/models"
+  runs_dir: "artifacts/runs"
