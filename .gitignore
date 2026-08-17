@@ -1,0 +1,22 @@
+# Python Caches & Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+*.egg-info/
+
+# Data & Artifacts (Handled by DVC)
+data/raw/*.csv
+data/processed/*.parquet
+artifacts/models/*.pkl
+artifacts/models/*.joblib
+
+# OS & IDE Files
+.DS_Store
+.idea/
+.vscode/
+
+# Logs
+*.log
