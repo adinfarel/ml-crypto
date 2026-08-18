@@ -36,7 +36,7 @@ dev = [
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[tool.pytest.ini_options]
+[tool.pytest]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
