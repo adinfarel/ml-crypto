@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  quant-ml:
+    build: .
+    container_name: ml_crypto
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./artifacts:/app/artifacts
+      - /data:/app/data
+    environment:
+      - PYTHONBUFFERED=1
+    restart: always

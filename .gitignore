@@ -12,6 +12,7 @@ data/raw/*.csv
 data/processed/*.parquet
 artifacts/models/*.pkl
 artifacts/models/*.joblib
+artifacts/
 
 # OS & IDE Files
 .DS_Store
