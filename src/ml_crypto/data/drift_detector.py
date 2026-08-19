@@ -13,10 +13,7 @@ class DriftDetector:
     def __init__(self, num_buckets: int = 10):
         self.num_buckets = num_buckets
         
-    def calculate_psi(self, reference: np.ndarray, current: np.ndarray) -> float:
-        reference = reference[~np.isnan(reference)]
-        current = current[~np.isnan(current)]
-        
+    def calculate_psi(self, reference: np.ndarray, current: np.ndarray) -> float:       
         if len(reference) == 0 or len(current) == 0:
             return 0.0
         
@@ -30,8 +27,8 @@ class DriftDetector:
         bins[0] = min(bins[0], current.min()) - 1e-5
         bins[-1] = max(bins[-1], current.max()) + 1e-5
         
-        ref_counts, _ = np.histogram(reference, percentiles)
-        curr_counts, _ = np.histogram(current, percentiles)
+        ref_counts, _ = np.histogram(reference, bins=bins)
+        curr_counts, _ = np.histogram(current, bins=bins)
         
         eps = 1e-4
         ref_pct = (ref_counts + eps) / (len(reference) + eps * len(ref_counts))
@@ -48,8 +45,8 @@ class DriftDetector:
         overall_drift_flag = False
         
         for col in feature_cols:
-            ref_data = reference_df[col].values
-            curr_data = current_df[col].values
+            ref_data = reference_df[col].dropna().values
+            curr_data = current_df[col].dropna().values
             
             psi_val = self.calculate_psi(ref_data, curr_data)
             

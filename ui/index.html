@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Quant ML — Real-time Quantitative Market Intelligence">
+    <title>Quant ML Terminal</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+
+    <!-- Pinned Top Navigation Bar (100% Stable, No Overlap) -->
+    <nav class="nav" id="main-nav">
+        <div class="nav-brand" onclick="navigateTo('home')">
+            <div class="nav-brand-icon">Q</div>
+            <span class="nav-brand-text">Quant ML</span>
+        </div>
+        <div class="nav-links">
+            <a class="nav-link active" data-page="home" onclick="navigateTo('home')">Home</a>
+            <a class="nav-link" data-page="analysis" onclick="navigateTo('analysis')">Analysis</a>
+            <a class="nav-link" data-page="about" onclick="navigateTo('about')">About</a>
+        </div>
+        <div class="nav-status">
+            <span class="nav-dot"></span>
+            <span>TELEMETRY STREAM ACTIVE</span>
+        </div>
+    </nav>
+
+    <!-- App Viewport Container -->
+    <div id="app-viewport">
+
+        <!-- ================= PAGE 1: HOME ================= -->
+        <section id="page-home" class="page active">
+            <div class="hero">
+                <div class="hero-canvas-wrap" id="hero-canvas"></div>
+                <div class="hero-content">
+                    <div class="hero-tag">BTC / USDT Quantitative Terminal</div>
+                    <h1 class="hero-title">
+                        Quantitative Analysis<br>
+                        <span class="highlight">Market Signals</span>
+                    </h1>
+                    <p class="hero-desc">
+                        Statistical feature engine evaluating live moving average distances, RSI momentum, and volatility windows in real time.
+                    </p>
+                    <div class="hero-actions">
+                        <button class="btn-primary" onclick="navigateTo('analysis')">
+                            Launch Terminal
+                            <span>&rarr;</span>
+                        </button>
+                        <button class="btn-secondary" onclick="navigateTo('about')">
+                            System Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-section">
+                <div class="features-label">System Architecture</div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <span class="feature-card-tag orange">01 / MODEL</span>
+                        <h3>LightGBM Inference Core</h3>
+                        <p>Gradient-boosted decision trees trained on historical Binance interval klines with low latency prediction cycles.</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-card-tag blue">02 / FEATURES</span>
+                        <h3>Multi-Window Engine</h3>
+                        <p>Automated extraction of moving average distance metrics (5m, 15m, 60m), RSI momentum, and 20m volatility spread.</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-card-tag green">03 / STREAM</span>
+                        <h3>Real-Time Telemetry</h3>
+                        <p>Asynchronous stream evaluation evaluating price action continuously to produce actionable BUY/SELL signals.</p>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">Feature Vectors</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value"><span class="accent">1m</span></div>
+                        <div class="stat-label">Interval Resolution</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">v1.0</div>
+                        <div class="stat-label">Model Pipeline</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">&lt;1<span class="accent">ms</span></div>
+                        <div class="stat-label">Inference Time</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: ANALYSIS ================= -->
+        <section id="page-analysis" class="page">
+            <div class="analysis-layout">
+                <!-- Main Chart Viewport -->
+                <div class="analysis-main" id="analysis-main">
+
+                    <!-- Integrated Chart Toolbar -->
+                    <div class="chart-bar">
+                        <div class="chart-pair">
+                            <span class="chart-symbol">BTC / USDT</span>
+                            <span class="chart-badge">Spot</span>
+                            <span class="live-price-tag" id="live-price-val">$64,774.62</span>
+                        </div>
+
+                        <div class="ohlc-readout-inline">
+                            <div class="ohlc-item">O: <span id="ohlc-open">64,820.00</span></div>
+                            <div class="ohlc-item">H: <span id="ohlc-high">64,890.50</span></div>
+                            <div class="ohlc-item">L: <span id="ohlc-low">64,740.10</span></div>
+                            <div class="ohlc-item">C: <span id="ohlc-close">64,774.62</span></div>
+                            <div class="ohlc-item">Vol: <span id="ohlc-vol">54.20 BTC</span></div>
+                        </div>
+
+                        <div class="chart-info">
+                            <span id="chart-time">--:--:--</span>
+                            <span>1m Frame</span>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Container -->
+                    <div class="chart-wrap">
+                        <div id="candlestick-chart"></div>
+                    </div>
+                </div>
+
+                <!-- Telemetry Sidebar (Read-Only Live System Metrics) -->
+                <div class="analysis-sidebar">
+                    <div class="side-section">
+                        <div class="side-label">
+                            <span>Moving Average Telemetry</span>
+                            <span class="live-pulse-badge"><span class="dot"></span> Live Stream</span>
+                        </div>
+                        <div class="telemetry-grid">
+                            <div class="metric-card">
+                                <div class="metric-info">
+                                    <span class="metric-name">MA Distance 5m</span>
+                                    <span class="metric-sub">Fast Trend Deviation</span>
+                                </div>
+                                <span class="metric-val green" id="disp_ma_dist_5">+0.0020</span>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-info">
+                                    <span class="metric-name">MA Distance 15m</span>
+                                    <span class="metric-sub">Mid Trend Spread</span>
+                                </div>
+                                <span class="metric-val green" id="disp_ma_dist_15">+0.0050</span>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-info">
+                                    <span class="metric-name">MA Distance 60m</span>
+                                    <span class="metric-sub">Macro Trend Bias</span>
+                                </div>
+                                <span class="metric-val" style="color: var(--sell);" id="disp_ma_dist_60">-0.0100</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="side-section">
+                        <div class="side-label">
+                            <span>Volatility &amp; Momentum</span>
+                            <span class="live-pulse-badge"><span class="dot"></span> 1m Sync</span>
+                        </div>
+                        <div class="telemetry-grid">
+                            <div class="metric-card">
+                                <div class="metric-info">
+                                    <span class="metric-name">Volatility 20m</span>
+                                    <span class="metric-sub">Standard Deviation</span>
+                                </div>
+                                <span class="metric-val blue" id="disp_volatility_20">0.0015</span>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-info">
+                                    <span class="metric-name">RSI (14 Period)</span>
+                                    <span class="metric-sub">Momentum Index</span>
+                                </div>
+                                <span class="metric-val" id="disp_rsi_14">55.4</span>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-info">
+                                    <span class="metric-name">Volume Ratio 15m</span>
+                                    <span class="metric-sub">Relative Pressure</span>
+                                </div>
+                                <span class="metric-val blue" id="disp_vol_ratio_15m">1.20x</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden inputs for backend compatibility -->
+                    <div class="hidden-inputs">
+                        <input type="number" id="ma_dist_5" value="0.002">
+                        <input type="number" id="ma_dist_15" value="0.005">
+                        <input type="number" id="ma_dist_60" value="-0.01">
+                        <input type="number" id="volatility_20" value="0.0015">
+                        <input type="number" id="rsi_14" value="55.4">
+                        <input type="number" id="vol_ratio_15m" value="1.2">
+                    </div>
+
+                    <div class="side-section">
+                        <button class="btn-run" id="btn-run" onclick="sendPrediction()">
+                            <span class="btn-label">Evaluate System Signal</span>
+                        </button>
+                    </div>
+
+                    <div class="side-section">
+                        <div class="side-label">Model Inference Signal</div>
+                        <div id="signal-display" class="signal-badge">READY</div>
+                        <div class="return-row">
+                            <span class="return-label">Predicted Return</span>
+                            <span id="return-display">0.000000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: ABOUT ================= -->
+        <section id="page-about" class="page">
+            <div class="about-wrap">
+                <div class="about-header">
+                    <div class="about-tag">System Documentation</div>
+                    <h1 class="about-title">Quant ML Pipeline</h1>
+                    <p class="about-subtitle">
+                        An end-to-end Quantitative Machine Learning Pipeline for high-frequency time-series financial evaluation (Binance BTC/USDT 1-minute klines).
+                    </p>
+                </div>
+
+                <div class="about-section">
+                    <h2>Key Engineering Design</h2>
+                    <p>
+                        <strong>Strict Temporal Splitting:</strong> Chronological data partitioning ensures historical training data strictly precedes validation and testing sets, preventing lookahead bias.
+                    </p>
+                    <p>
+                        <strong>Zero-Leakage Feature Engineering:</strong> Moving average distance, rolling volatility, RSI, and volume ratio indicators are computed using strict backward-looking windows to maintain data integrity.
+                    </p>
+                    <p>
+                        <strong>Statistical Drift Detection:</strong> Evaluates potential distribution shifts between training baseline and test intervals using Population Stability Index (PSI) and Kolmogorov-Smirnov (KS-Test).
+                    </p>
+                </div>
+
+                <div class="about-section">
+                    <h2>System Components</h2>
+                    <p>
+                        <strong>Model Registry &amp; Promotion Gate:</strong> Automatically logs execution manifests, tracks random seed determinism, and evaluates candidate models against active production checkpoints.
+                    </p>
+                    <p>
+                        <strong>Low-Latency Serving:</strong> FastAPI serving layer delivering sub-millisecond REST inference endpoints paired with a responsive 3D WebGL terminal interface.
+                    </p>
+                </div>
+
+                <div class="about-section">
+                    <h2>Core Tech Stack</h2>
+                    <div class="tech-grid">
+                        <div class="tech-item">
+                            <span class="tech-dot orange"></span>
+                            <div class="tech-info">
+                                <span class="tech-name">LightGBM</span>
+                                <span class="tech-desc">Gradient Boosting</span>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot blue"></span>
+                            <div class="tech-info">
+                                <span class="tech-name">FastAPI</span>
+                                <span class="tech-desc">REST Server</span>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot green"></span>
+                            <div class="tech-info">
+                                <span class="tech-name">Lightweight Charts</span>
+                                <span class="tech-desc">Financial Canvas</span>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <span class="tech-dot white"></span>
+                            <div class="tech-info">
+                                <span class="tech-name">Three.js</span>
+                                <span class="tech-desc">WebGL Graphics</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-footer">
+                    Quant ML Terminal &mdash; All Rights Reserved.
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="/static/script.js"></script>
+</body>
+</html>
