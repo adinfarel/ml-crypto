@@ -16,7 +16,7 @@ def calculate_file_hash(file_path: Path) -> str:
         return "FILE_NOT_FOUND"
     
     hash_md5 = hashlib.md5()
-    if file_path.is_file():
+    if file_path.is_dir():
         files = sorted(list(file_path.glob("*csv")))
         
         if not files:
