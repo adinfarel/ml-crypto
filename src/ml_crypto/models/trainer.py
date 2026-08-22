@@ -3,7 +3,7 @@ import uuid
 import numpy as np
 import pandas as pd
 from typing import Tuple, Dict, Any
-from lightgbm import LGBMRegressor
+from lightgbm import LGBMRegressor, early_stopping, log_evaluation
 from sklearn.metrics import mean_squared_error
 
 from ml_crypto.config import AppConfig
@@ -35,7 +35,14 @@ class ModelTrainer:
         # setup model
         model = LGBMRegressor(**self.config.modeling.hyperparameters)
         # fit (training) model
-        model.fit(X_train, y_train)
+        model.fit(
+            X_train, y_train,
+            eval_set=[(X_val, y_val)],
+            callbacks=[
+                early_stopping(stopping_rounds=15, verbose=False),
+                log_evaluation(period=0)
+            ]
+        )
         # predict
         preds = model.predict(X_val)
         train_preds = model.predict(X_train)
@@ -44,12 +51,23 @@ class ModelTrainer:
         tr_rmse = float(np.sqrt(mean_squared_error(y_train, train_preds)))
         rmse = float(np.sqrt(mean_squared_error(y_val, preds)))
         # how often model correct predict sign (+/-)
-        dir_acc = float(np.mean(np.sign(preds) == np.sign(y_val)))
+        non_zero_mask = y_val != 0
+        if np.sum(non_zero_mask) > 0:
+            dir_acc = float(np.mean(np.sign(preds[non_zero_mask]) == np.sign(y_val[non_zero_mask])))
+        else:
+            dir_acc = 0.5
+        # information return
+        simulated_returns = np.sign(preds) * y_val
+        ret_mean = np.mean(simulated_returns)
+        ret_std = np.std(simulated_returns) + 1e-8
+        information_ratio = float((ret_mean / ret_std) * np.sqrt(525600))
         
         metrics = {
             "train_rmse": tr_rmse,
             "val_rmse": rmse,
             "directional_accuracy": dir_acc,
+            "information_ratio": information_ratio,
+            "best_iteration": int(model.best_iteration_ if hasattr(model, "best_iteration_") else -1)
         }
         
         # manifest

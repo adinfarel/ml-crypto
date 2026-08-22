@@ -1,5 +1,6 @@
 import json
 import joblib
+import shutil
 import pandas as pd
 from pathlib import Path
 from typing import Dict, Any, Optional
@@ -49,7 +50,7 @@ class ModelRegistry:
         prod_model = self.models_dir / "production_model.pkl"
         
         # replace
-        joblib.dump(joblib.load(source_model), prod_model)
+        shutil.copyfile(source_model, prod_model)
         
         source_manifest = self.runs_dir / f"run_{run_id}.json"
         with open(source_manifest, "r") as f:
