@@ -13,6 +13,7 @@ data/processed/*.parquet
 artifacts/models/*.pkl
 artifacts/models/*.joblib
 artifacts/
+benchmark/results
 
 # OS & IDE Files
 .DS_Store

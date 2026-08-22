@@ -16,6 +16,19 @@ def calculate_file_hash(file_path: Path) -> str:
         return "FILE_NOT_FOUND"
     
     hash_md5 = hashlib.md5()
+    if file_path.is_file():
+        files = sorted(list(file_path.glob("*csv")))
+        
+        if not files:
+            return "EMPTY_DIR"
+        
+        for f in files:
+            with open(f, 'rb') as reader:
+                for chunk in iter(lambda: reader.read(4096), b""):
+                    hash_md5.update(chunk)
+                    
+        return hash_md5.hexdigest()
+    
     with open(file_path, 'rb') as reader:
         for chunk in iter(lambda: reader.read(4096), b""):
             hash_md5.update(chunk)
