@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from ml_crypto.config import FeaturesConfig
 from ml_crypto.features.engine import FeatureEngine
+from ml_crypto.features.schema import FEATURE_SCHEMA
 
 @pytest.fixture
 def sample_features_config():
@@ -41,7 +42,8 @@ def test_feature_engine_creates_expected_columns(mock_kline_df, sample_features_
     df_out, feature_cols = engine.create_features_and_target(mock_kline_df)
 
     assert "target_return" in df_out.columns
-    assert len(feature_cols) == 6
+    assert len(feature_cols) == 15
+    assert set(feature_cols) == set(FEATURE_SCHEMA.required_features)
     assert df_out[feature_cols].isnull().sum().sum() == 0
 
 
