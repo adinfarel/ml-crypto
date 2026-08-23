@@ -4,7 +4,7 @@ system:
   environment: "development"
 
 data:
-  raw_path: "data/raw/BTCUSDT-1m-2026-07.csv"
+  raw_path: "data/raw"
   processed_dir: "data/processed"
   reference_dir: "data/reference"
   time_column: "timestamp"

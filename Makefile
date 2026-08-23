@@ -4,10 +4,10 @@ install:
 	pip install -e ".[dev]"
 
 test:
-	pytest -v
+	python -m pytest -v
 
 train:
-	python main.py
+	python -m mode train
 
 run-api:
 	uvicorn serving.app:app --reload --port 8000
