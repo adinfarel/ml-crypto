@@ -245,7 +245,7 @@ Every run writes a JSON manifest to `artifacts/runs/` capturing the exact config
 
 ---
 
-## 🛠 Project Status & Known Issues
+## Project Status & Known Issues
 
 This project is under active development. Current focus areas:
 
