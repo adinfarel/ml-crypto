@@ -1,4 +1,4 @@
-# Quant ML Pipeline (`quant-ml-pipeline`)
+# Quant ML Pipeline (`ml-crypto`)
 
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
